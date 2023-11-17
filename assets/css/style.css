@@ -1,0 +1,48 @@
+body {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 40px;
+}
+
+
+header {
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    margin: 3% 10% 1% 10%;
+
+}
+
+#high-scores {
+    text-decoration: none;
+}
+
+#timer {
+    margin: 0 0 0 0;
+}
+
+#big-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 80vh;
+}
+
+#answers {
+    list-style: none;
+
+}
+
+#answers li {
+    background-color: blue;
+    padding: 1% 1% 1% 1%;
+    margin: 1% 1% 1% 1%;
+    cursor: pointer;
+}
+
+#answers li:hover {
+    background-color: green;
+
+}
+    
+
