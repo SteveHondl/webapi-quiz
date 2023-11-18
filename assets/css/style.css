@@ -1,6 +1,6 @@
 body {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: 40px;
+    font-size: 34px;
 }
 
 
@@ -14,10 +14,12 @@ header {
 
 #high-scores {
     text-decoration: none;
+    font-size: 60px;
+    color: purple;
 }
 
 #timer {
-    margin: 0 0 0 0;
+    font-size: 60px;
 }
 
 #big-container {
@@ -28,21 +30,37 @@ header {
     height: 80vh;
 }
 
+#q-a-container{
+    text-align: center;
+}
+
+#questions{
+    font-size: 30px;
+    margin-bottom: 5%;
+}
+
 #answers {
     list-style: none;
+    padding: 1%;
 
 }
 
 #answers li {
-    background-color: blue;
-    padding: 1% 1% 1% 1%;
-    margin: 1% 1% 1% 1%;
+    background-color: rgb(142, 142, 170);
+    padding: 10px;
+    margin: 10px;
     cursor: pointer;
+    text-align: center;
+    border-radius: 4%;
 }
 
 #answers li:hover {
     background-color: green;
+    color: white;
 
 }
     
+.hidden {
+    display: none;
+}
 
