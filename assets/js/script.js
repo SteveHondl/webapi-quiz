@@ -37,10 +37,27 @@ var questions = [
   },
 
 ];
+
+// Add a property to each question object to track the user's answer
+for (var i = 0; i < questions.length; i++) {
+     // Initialize to null, indicating no user answer yet
+    questions[i].userAnswer = null;
+}
+
 //Interactive start button for user to start quiz
 startButton.addEventListener("click", startQuiz);
 //Once user starts quiz, start-screen is hidden and quiz is started
 function startQuiz() {
+
+    var quizContainer = document.querySelector(".quiz-container");
+    quizContainer.style.display = "none";
+
+    // var quizTitleElements = document.querySelectorAll("quiz-title");
+    // for (var i = 0; i < quizTitleElements.length; i++) {
+    //     quizTitleElements[i].style.display = "none";
+    // }
+
+
     console.log("Quiz has started");
     // Hide the start screen
     document.getElementById("start-screen").style.display = "none";
@@ -59,32 +76,73 @@ function startQuiz() {
     //allows user to select an answer
     addAnswerListeners();
  }
+// Function to display a question on the screen
+function showQuestion(questionText) {
+    // Log a message to the console indicating that we are showing the question
+    console.log("Displaying question: " + questionText);
 
- //shows question text for each dynamic question
- function showQuestion(questionText){
-    console.log("showing question text " + questionText);
-    questionElement.innerText = questionText;
- }
+    // Get the HTML element with the ID "questions"
+    var questionElement = document.getElementById("questions");
+
+    // Create a text node with the question text
+    var textNode = document.createTextNode(questionText);
+
+    // Clear any existing content in the element
+    while (questionElement.firstChild) {
+        questionElement.removeChild(questionElement.firstChild);
+    }
+
+    // Append the new text node to the element
+    questionElement.appendChild(textNode);
+}
+
+
 
  //shows dynamic answers
  function showAnswers(answerChoices){
-    console.log("displaying answers " + answerChoices.join(", "))
+    console.log("displaying answers " + answerChoices.join(", "));
     //sets element to an empty string, content is cleared and ready for a new set of answers
-    answersElement.innerHTML = "";
-    //
-    for (let index = 0; index < answerChoices.length; index++) {
-        //get the current choice from the array
+    var answersElement = document.getElementById("answers")
+    
+    while (answersElement.firstChild) {
+        answersElement.removeChild(answersElement.firstChild);
+    }
+
+    for (var index = 0; index < answerChoices.length; index++) {
+        // Get the current choice from the array
         var choice = answerChoices[index];
-        //create a dynamic list element
+
+        // Create a dynamic list element
         var choiceElement = document.createElement("li");
-        //set the text inside the list item to the current choice
-        choiceElement.textContent = choice;
-        //user click will be handled
+
+        // Create a text node with the current choice
+        var textNode = document.createTextNode(choice);
+
+        // Append the text node to the list element
+        choiceElement.appendChild(textNode);
+
+        // User click will be handled
         choiceElement.addEventListener("click", handleAnswerClick);
-        //append to HTML element
+
+        // Append the list element to the "answers" element
         answersElement.appendChild(choiceElement);
     }
 }
+
+
+//     for (let index = 0; index < answerChoices.length; index++) {
+//         //get the current choice from the array
+//         var choice = answerChoices[index];
+//         //create a dynamic list element
+//         var choiceElement = document.createElement("li");
+//         //set the text inside the list item to the current choice
+//         choiceElement.textContent = choice;
+//         //user click will be handled
+//         choiceElement.addEventListener("click", handleAnswerClick);
+//         //append to HTML element
+//         answersElement.appendChild(choiceElement);
+//     }
+// }
 
 function addAnswerListeners() {
     // get all list items inside the HTML element
@@ -109,10 +167,14 @@ function handleAnswerClick(event) {
 
     if (selectedAnswer === currentQuestion.correctAnswer) {
         console.log("correct answer selected!");
+
+        currentQuestion.userAnswer = selectedAnswer;
         // Handle correct answer
     } else {
         // Handle incorrect answer
         console.log("Incorrect answer selected!");
+
+        currentQuestion.userAnswer = selectedAnswer;
     }
 
     // Move to the next question or end the quiz if there are no more questions
@@ -128,9 +190,36 @@ function handleAnswerClick(event) {
 }
 
 function endQuiz() {
-    // Display a message or perform any actions when the quiz is completed
-    console.log("Quiz completed!");
+    // Calculate the number of correct answers
+    var correctAnswers = 0;
+
+    // Loop through all questions and check if the user's answer matches the correct answer
+    for (var i = 0; i < questions.length; i++) {
+        if (questions[i].userAnswer === questions[i].correctAnswer) {
+            correctAnswers++;
+        }
+    }
+
+    // Display the finish screen with the number of correct answers
+    var quizContainer = document.getElementById("quiz-container");
+    quizContainer.style.display = "none";
+
+    var finishScreen = document.getElementById("finish-screen");
+    finishScreen.style.display = "block";
+
+    var resultMessage = document.getElementById("result-message");
+    resultMessage.innerText = "You got " + correctAnswers + " out of " + questions.length + " questions right!";
+
 }
+
+
+
+
+
+
+
+
+
 
     
 

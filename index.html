@@ -15,14 +15,13 @@
     </header>
 
     <section id="start-screen">
-        <h1>Javascript Quiz</h1>
+        <h1 class="quiz-title">Javascript Quiz</h1>
         <p>click the start button to start the quiz</p>
         <button id="start-quiz">START QUIZ</button>
     </section>
 
-    <section id="quiz-container" style="display: none;">  
+    <section id="quiz-container" class="quiz-container" style="display: none;">  
 
-        <h1>Javascript Quiz</h1>
         <div id="q-a-container">
             <p id="questions">
                 <!--dynamic questions-->
@@ -34,6 +33,12 @@
         </div>
 
     </section>
+
+    
+    <section id="finish-screen" style="display: none;">
+        <h2 id="result-message"></h2>
+    </section>
+
 
     <script src="./assets/js/script.js"></script>
 </body>

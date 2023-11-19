@@ -8,18 +8,18 @@ header {
     text-align: left;
     display: flex;
     justify-content: space-between;
-    margin: 3% 10% 1% 10%;
+    margin: 1% 25% 0% 1%;
 
 }
 
 #high-scores {
     text-decoration: none;
-    font-size: 60px;
-    color: purple;
+    font-size: 30px;
+    color: rgb(131, 24, 131);
 }
 
 #timer {
-    font-size: 60px;
+    font-size: 40px;
 }
 
 #big-container {
@@ -36,7 +36,7 @@ header {
 
 #questions{
     font-size: 30px;
-    margin-bottom: 5%;
+    margin-top: 15%;
 }
 
 #answers {
@@ -70,4 +70,9 @@ header {
     flex-direction: column;
     justify-content: center;
     height: 80vh;
+}
+
+#result-message {
+    text-align: center;
+    margin-top: 25%;
 }
