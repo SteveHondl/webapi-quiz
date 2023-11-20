@@ -1,16 +1,18 @@
 //HTML References
-var quizContainer = document.getElementById("big-container");
 var startButton = document.getElementById("start-quiz");
-var questionElement = document.getElementById("questions");
+var timerElement = document.getElementById("timer");
+// var questionElement = document.getElementById("questions");
 var answersElement = document.getElementById("answers");
-var correctAnswer = document.getElementById("correct-answer")
 
 //Timer Variables
 var timer;
 var timerCount = 100;
 //Tracks current question starting with first question
 var currentQuestionIndex = 0;
+
+var questions = InitializeQuestions();
 //Quiz questions with array of answers and correct answer
+function InitializeQuestions(){
 var questions = [
   {
     quizQuestion: "How many days did it take Brendan Eich to create Javascript?",
@@ -42,6 +44,26 @@ var questions = [
 for (var i = 0; i < questions.length; i++) {
      // Initialize to null, indicating no user answer yet
     questions[i].userAnswer = null;
+    }
+
+    return questions
+}
+
+// Function to start the timer
+function startTimer() {
+    timer = setInterval(function () {
+        // Update the timer count
+        timerCount--;
+
+        // Display the updated timer count
+        timerElement.textContent = timerCount;
+
+        // Check if the timer has reached 0
+        if (timerCount <= 0) {
+            // End the quiz if the timer has reached 0
+            endQuiz();
+        }
+    }, 1000); // Update the timer every 1000 milliseconds (1 second)
 }
 
 //Interactive start button for user to start quiz
@@ -49,20 +71,16 @@ startButton.addEventListener("click", startQuiz);
 //Once user starts quiz, start-screen is hidden and quiz is started
 function startQuiz() {
 
-    var quizContainer = document.querySelector(".quiz-container");
+    var quizContainer = document.getElementById("quiz-container");
     quizContainer.style.display = "none";
-
-    // var quizTitleElements = document.querySelectorAll("quiz-title");
-    // for (var i = 0; i < quizTitleElements.length; i++) {
-    //     quizTitleElements[i].style.display = "none";
-    // }
-
 
     console.log("Quiz has started");
     // Hide the start screen
     document.getElementById("start-screen").style.display = "none";
     // Show the quiz container
     document.getElementById("quiz-container").style.display = "block";
+
+    startTimer()
     // Start displaying questions
     displayQuestion();
 }
@@ -78,7 +96,7 @@ function startQuiz() {
  }
 // Function to display a question on the screen
 function showQuestion(questionText) {
-    // Log a message to the console indicating that we are showing the question
+   
     console.log("Displaying question: " + questionText);
 
     // Get the HTML element with the ID "questions"
@@ -95,8 +113,6 @@ function showQuestion(questionText) {
     // Append the new text node to the element
     questionElement.appendChild(textNode);
 }
-
-
 
  //shows dynamic answers
  function showAnswers(answerChoices){
@@ -129,21 +145,6 @@ function showQuestion(questionText) {
     }
 }
 
-
-//     for (let index = 0; index < answerChoices.length; index++) {
-//         //get the current choice from the array
-//         var choice = answerChoices[index];
-//         //create a dynamic list element
-//         var choiceElement = document.createElement("li");
-//         //set the text inside the list item to the current choice
-//         choiceElement.textContent = choice;
-//         //user click will be handled
-//         choiceElement.addEventListener("click", handleAnswerClick);
-//         //append to HTML element
-//         answersElement.appendChild(choiceElement);
-//     }
-// }
-
 function addAnswerListeners() {
     // get all list items inside the HTML element
     var answerElements = answersElement.getElementsByTagName("li");
@@ -175,6 +176,8 @@ function handleAnswerClick(event) {
         console.log("Incorrect answer selected!");
 
         currentQuestion.userAnswer = selectedAnswer;
+
+        timerCount -=10;
     }
 
     // Move to the next question or end the quiz if there are no more questions
@@ -210,6 +213,7 @@ function endQuiz() {
     var resultMessage = document.getElementById("result-message");
     resultMessage.innerText = "You got " + correctAnswers + " out of " + questions.length + " questions right!";
 
+    clearInterval(timer)
 }
 
 
