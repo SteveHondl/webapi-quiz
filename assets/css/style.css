@@ -69,7 +69,29 @@ header {
     height: 80vh;
 }
 
-#result-message {
+#result-message{
     text-align: center;
     margin-top: 25%;
+}
+
+
+#reset-button {
+    display: block;
+    margin: auto;
+    margin-top: 20px; 
+    font-size: 20px;
+    cursor: pointer;
+    background-color: green;
+    color: white;
+
+}
+
+#clearscoresbutton {
+    display: block;
+    margin: auto;
+    margin-top: 25px; 
+    font-size: 20px;
+    cursor: pointer;
+    background-color: green;
+    color: white;
 }

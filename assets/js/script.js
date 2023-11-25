@@ -4,7 +4,7 @@ var timerElement = document.getElementById("timer");
 var answersElement = document.getElementById("answers");
 //Timer Variables
 var timer;
-var timerCount = 100;
+var timerCount = 60;
 //Tracks current question starting with first question
 var currentQuestionIndex = 0;
 //Initialize Quiz Questions 
@@ -65,7 +65,7 @@ function InitializeQuestions(){
 function startTimer() {
     timer = setInterval(function () {
         // Update the timer count
-        timerCount -=3;
+        timerCount -=1;
         
         // Display the updated timer count
         timerElement.textContent = timerCount;
@@ -280,9 +280,10 @@ function displayFinishScreen(userScore){
         resetQuiz();
     });
 
-    // Append the retake button to the finish screen
-    finishScreen.appendChild(retakeButton);
-}
+        // Append the retake button to the finish screen
+        finishScreen.appendChild(retakeButton);
+
+    }
 }
 
 
@@ -351,6 +352,15 @@ var retakeButton = document.getElementById("reset-button");
 retakeButton.addEventListener("click", function () {
     // Handle the click event for the retake button
     resetQuiz();
+});
+
+var clearScoresButton = document.getElementById("clearScoresButton");
+
+clearScoresButton.addEventListener("click", function() {
+    // Remove high scores from local storage
+    localStorage.removeItem("highScores");
+ 
+    location.reload();
 });
 
     
