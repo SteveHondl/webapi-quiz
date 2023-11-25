@@ -22,7 +22,7 @@ header {
     font-size: 40px;
 }
 
-#big-container {
+#quiz-container {
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -30,13 +30,10 @@ header {
     height: 80vh;
 }
 
-#q-a-container{
-    text-align: center;
-}
-
 #questions{
     font-size: 30px;
     margin-top: 15%;
+    text-align: center;
 }
 
 #answers {

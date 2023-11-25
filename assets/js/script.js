@@ -1,15 +1,13 @@
 //HTML References
 var startButton = document.getElementById("start-quiz");
 var timerElement = document.getElementById("timer");
-var questionElement = document.getElementById("questions");
 var answersElement = document.getElementById("answers");
-
 //Timer Variables
 var timer;
 var timerCount = 100;
 //Tracks current question starting with first question
 var currentQuestionIndex = 0;
-
+//Initialize Quiz Questions 
 var questions = InitializeQuestions();
 //Quiz questions with array of answers and correct answer
 function InitializeQuestions(){
@@ -23,7 +21,6 @@ function InitializeQuestions(){
                 {text:"30 days", correct: false},
                 {text:"40 days", correct: false},
             ],
-            correctAnswer: "10 days",
         },
         {
             question: "In what year was JavaScript invented according to Google?",
@@ -33,8 +30,6 @@ function InitializeQuestions(){
                 { text: "1996", correct: false },
                 { text: "2000", correct: false },
             ],
-
-            correctAnswer: "1995",
         },
         {
             question: "What was the original name of JavaScript?",
@@ -44,7 +39,6 @@ function InitializeQuestions(){
                 { text: "Mocha", correct: true },
                 { text: "Cappuccino", correct: false },
             ],
-            correctAnswer: "Mocha",
         },
         {
             question: "Which of the following items does not involve the use of JavasScript?",
@@ -54,16 +48,14 @@ function InitializeQuestions(){
                 {text: "Checking the score of the Super Bowl on your phone", correct: false},
                 {text: "Parallel parking your vehicle", correct: true},
             ],
-            correctAnswer:"Parallel parking your vehicle",
         }
         
     ];
     
-    
     // Add a property to each question object to track the user's answer
     for (var i = 0; i < allQuizQuestions.length; i++) {
         // Initialize to null, indicating no user answer yet
-    allQuizQuestions[i].userAnswer = null;
+         allQuizQuestions[i].userAnswer = null;
     }
     
     return allQuizQuestions;
@@ -73,7 +65,7 @@ function InitializeQuestions(){
 function startTimer() {
     timer = setInterval(function () {
         // Update the timer count
-        timerCount--;
+        timerCount -=5;
         
         // Display the updated timer count
         timerElement.textContent = timerCount;
@@ -83,12 +75,13 @@ function startTimer() {
             // End the quiz if the timer has reached 0
             endQuiz();
         }
-    }, 1000); // Update the timer every 1000 milliseconds (1 second)
+    // Update the timer every 1000 milliseconds (1 second)
+    }, 1000);
 }
 
-//Interactive start button for user to start quiz
-startButton.addEventListener("click", startQuiz);
-//Once user starts quiz, start-screen is hidden and quiz is started
+    //Interactive start button for user to start quiz
+    startButton.addEventListener("click", startQuiz);
+    //Once user starts quiz, start-screen is hidden and quiz is started
 function startQuiz() {
     
     var quizContainer = document.getElementById("quiz-container");
@@ -131,7 +124,7 @@ function displayAnswers(elementId, answerChoices, clickHandler) {
     // Get the HTML element with the specified ID
     var answersElement = document.getElementById(elementId);
     
-    // Clear any existing content in the "answers" element
+    // // Clear any existing content in the "answers" element
     answersElement.innerHTML = "";
     
     // Loop through answer choices
@@ -151,15 +144,9 @@ function displayAnswers(elementId, answerChoices, clickHandler) {
         answersElement.appendChild(choiceElement);
     }
 }
-function addAnswerListeners() {
-    // get all list items inside the HTML element
-    var answerElements = answersElement.getElementsByTagName("li");
-    
-    for (var i = 0; i < answerElements.length; i++) {
-        //add click event listener to each list item
-        //when list item is clicked, it will be handled 
-        answerElements[i].addEventListener("click", handleAnswerClick);
-    }
+//will find the correct answer in each set of answers
+function findCorrectAnswer(answers){
+    return answers.find(answer => answer.correct);
 }
 
 //handles the click even when any answer is selected
@@ -167,22 +154,19 @@ function handleAnswerClick(event) {
     var currentQuestion = questions[currentQuestionIndex];
     var selectedAnswerText = event.target.textContent;
 
-    var correctAnswer = currentQuestion.answers.find(answer =>answer.correct)
+    var correctAnswer = findCorrectAnswer(currentQuestion.answers)
 
-
+    //Handles correct answer
     if (selectedAnswerText === correctAnswer.text) {
         console.log("Correct answer selected!");
         currentQuestion.userAnswer = selectedAnswerText;
-        // Handle correct answer
+    //Handles incorrect answer with a penalty of -10
     } else {
         console.log("Incorrect answer selected!");
         currentQuestion.userAnswer = selectedAnswerText;
         timerCount -= 10;
     }
-
-
-
-// Move to the next question or end the quiz if there are no more questions
+    // Move to the next question or end the quiz if there are no more questions
     currentQuestionIndex++;
     //check if there are more questions to display
     if (currentQuestionIndex < questions.length) {
@@ -193,18 +177,33 @@ function handleAnswerClick(event) {
         endQuiz();
     }
 }
-    
-    function endQuiz() {
+//Quiz has ended, final score displayed 
+function endQuiz() {
         // Calculate the number of correct answers
         var correctAnswers = 0;
+        var userScore = timerCount;
     
         
         // Loop through all questions and check if the user's answer matches the correct answer
         for (var i = 0; i < questions.length; i++) {
-            if (questions[i].userAnswer === questions[i].correctAnswer) {
+            var correctAnswer = findCorrectAnswer(questions[i].answers);
+            if (questions[i].userAnswer === correctAnswer.text) {
                 correctAnswers++;
             }
         }
+        //prompts user to enter their initials 
+        var userInitials = prompt("Enter your initials");
+        //leader board credentials
+        var leaderBoard = {
+            name: userInitials,
+            score: userScore
+        };
+        //retrieve high score from local storage OR initialize an empty array
+        var userScores = JSON.parse(localStorage.getItem("highScores")) || [];
+        //add new entry to the leader board
+        userScores.push(leaderBoard);
+        //save the updated high scores to local storage
+        localStorage.setItem("highScores", JSON.stringify(userScores));
         
         // Display the finish screen with the number of correct answers
         var quizContainer = document.getElementById("quiz-container");
@@ -214,27 +213,57 @@ function handleAnswerClick(event) {
         finishScreen.style.display = "block";
         
         var resultMessage = document.getElementById("result-message");
-        resultMessage.innerText = "You got " + correctAnswers + " out of " + questions.length + " questions right!";
+        resultMessage.innerText = "Your Score is: " + userScore;
         
-        clearInterval(timer)
+        clearInterval(timer);
+        
     }
     
+    var highScoresLink = document.getElementById("highScoresLink");
     
+    highScoresLink.addEventListener("click", displayHighScores);
     
+    function displayHighScores(){
+        var highScoresList = document.getElementById("highScoresList");
+        var highScores = JSON.parse(localStorage.getItem("highScores")) || [];
+       // Sort scores in descending order
+        highScores.sort((a, b) => b.score - a.score); 
+        
+        console.log("Local Storage Content (Before Update):", localStorage);
+        // Clear any existing content
+        highScoresList.innerHTML = "";
+        
+        var numberOfScoresToDisplay = Math.min(highScores.length, 15);
+
+        // Use a for loop to iterate through highScores
+        for (var i = 0; i < numberOfScoresToDisplay; i++) {
+            var score = highScores[i];
+            var listItem = createScoreListItem(score, i);
+            highScoresList.appendChild(listItem);
+        }
+        // Show the high scores screen
+        var highScoresScreen = document.getElementById("highScoresScreen");
+        highScoresScreen.style.display = "block";
     
+        // Hide other screens if needed
+        var quizContainer = document.getElementById("quiz-container");
+        quizContainer.style.display = "none";
     
+        var finishScreen = document.getElementById("finish-screen");
+        finishScreen.style.display = "none";
     
+        // Log the updated content in localStorage
+        console.log("Local Storage Content (After Update):", localStorage);
     
+    };
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    // Function to create a list item for a high score
+    function createScoreListItem(score, index) {
+         var listItem = document.createElement("li");
+         listItem.textContent = `${index + 1}. ${score.name}: ${score.score}`;
+        return listItem;
+}
+
     
     
     

@@ -10,7 +10,7 @@
 <body>
 
     <header>
-        <a href="#" id="high-scores">Highscores</a>
+        <a id="highScoresLink" href="#">High scores</a>
         <span id="timer">Time Left:</span>
     </header>
 
@@ -22,16 +22,17 @@
 
     <section id="quiz-container" class="quiz-container" style="display: none;">  
 
-        <div id="q-a-container">
             <p id="questions">
                 <!--dynamic questions-->
             </p>
             
             <ul id="answers">
-               <li></li> <!--dynamic answers-->
+              
             </ul>
-        </div>
-
+           
+     </section>
+     <section id="highScoresScreen" style="display: none;">
+        <ul id="highScoresList"></ul>
     </section>
 
     
