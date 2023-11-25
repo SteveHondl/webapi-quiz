@@ -65,7 +65,7 @@ function InitializeQuestions(){
 function startTimer() {
     timer = setInterval(function () {
         // Update the timer count
-        timerCount -=5;
+        timerCount -=3;
         
         // Display the updated timer count
         timerElement.textContent = timerCount;
@@ -119,14 +119,12 @@ function displayContent(elementId, content) {
 
 // Shows dynamic answers
 function displayAnswers(elementId, answerChoices, clickHandler) {
-    console.log("Displaying answers: " + answerChoices.join(", "));
-    
+
     // Get the HTML element with the specified ID
     var answersElement = document.getElementById(elementId);
-    
-    // // Clear any existing content in the "answers" element
+
     answersElement.innerHTML = "";
-    
+
     // Loop through answer choices
     for (var index = 0; index < answerChoices.length; index++) {
         var choice = answerChoices[index];
@@ -142,8 +140,33 @@ function displayAnswers(elementId, answerChoices, clickHandler) {
         
         // Append the list element to the "answers" element
         answersElement.appendChild(choiceElement);
+        // // Clear any existing content in the "answers" element
     }
 }
+
+function showQuestionFeedback() {
+    var currentQuestion = questions[currentQuestionIndex - 1];
+    var correctAnswer = findCorrectAnswer(currentQuestion.answers);
+    var userAnswer = currentQuestion.userAnswer;
+
+    var feedbackMessage = document.getElementById("feedback-message");
+
+    if (userAnswer === correctAnswer.text) {
+        feedbackMessage.textContent = "Correct!";
+    } else {
+        feedbackMessage.textContent = "Incorrect.";
+    }
+}
+function displayFeedbackMessage(message) {
+    var feedbackElement = document.getElementById("feedback-message");
+    feedbackElement.textContent = message;
+
+    // Clear the feedback message after a brief delay
+    setTimeout(function () {
+        feedbackElement.textContent = "";
+    }, 1000);
+}
+
 //will find the correct answer in each set of answers
 function findCorrectAnswer(answers){
     return answers.find(answer => answer.correct);
@@ -151,6 +174,7 @@ function findCorrectAnswer(answers){
 
 //handles the click even when any answer is selected
 function handleAnswerClick(event) {
+    if(currentQuestionIndex < questions.length){
     var currentQuestion = questions[currentQuestionIndex];
     var selectedAnswerText = event.target.textContent;
 
@@ -158,11 +182,11 @@ function handleAnswerClick(event) {
 
     //Handles correct answer
     if (selectedAnswerText === correctAnswer.text) {
-        console.log("Correct answer selected!");
+        displayFeedbackMessage("Correct");
         currentQuestion.userAnswer = selectedAnswerText;
     //Handles incorrect answer with a penalty of -10
     } else {
-        console.log("Incorrect answer selected!");
+        displayFeedbackMessage("Incorrect");
         currentQuestion.userAnswer = selectedAnswerText;
         timerCount -= 10;
     }
@@ -173,38 +197,67 @@ function handleAnswerClick(event) {
         //if yes, display question
         displayQuestion();
     } else {
+
+        showQuestionFeedback();
         //if no more questions, end quiz
-        endQuiz();
+
+        setTimeout(endQuiz, 1000);
+
+        
+        }
     }
 }
+
 //Quiz has ended, final score displayed 
 function endQuiz() {
         // Calculate the number of correct answers
-        var correctAnswers = 0;
+        // var correctAnswers = totalNumberOfCorrectAnswers();
         var userScore = timerCount;
+        
+        updateLeaderBoard(userScore);
+
+        displayFinishScreen(userScore);
+        
+        clearInterval(timer);
+        
+    }
+function totalNumberOfCorrectAnswers(){
+        var correctAnswers = 0
     
-        
-        // Loop through all questions and check if the user's answer matches the correct answer
-        for (var i = 0; i < questions.length; i++) {
-            var correctAnswer = findCorrectAnswer(questions[i].answers);
-            if (questions[i].userAnswer === correctAnswer.text) {
-                correctAnswers++;
-            }
+    // Loop through all questions and check if the user's answer matches the correct answer
+    for (var i = 0; i < questions.length; i++) {
+        var correctAnswer = findCorrectAnswer(questions[i].answers);
+        if (questions[i].userAnswer === correctAnswer.text) {
+            correctAnswers++;
         }
-        //prompts user to enter their initials 
-        var userInitials = prompt("Enter your initials");
-        //leader board credentials
-        var leaderBoard = {
-            name: userInitials,
-            score: userScore
-        };
-        //retrieve high score from local storage OR initialize an empty array
-        var userScores = JSON.parse(localStorage.getItem("highScores")) || [];
-        //add new entry to the leader board
-        userScores.push(leaderBoard);
-        //save the updated high scores to local storage
-        localStorage.setItem("highScores", JSON.stringify(userScores));
+    }
+    return correctAnswers
+}
         
+function updateLeaderBoard(userScore){
+    
+    //prompts user to enter their initials 
+    var userInitials = prompt("Enter your first name or enter your initials");
+    //if users clicks ok with an empty string, they will be prompted until they fill in the field
+    if (userInitials === ""){
+        alert("please enter your first name or initials");
+        updateLeaderBoard(userScore);
+    }
+    //leader-board credentials
+    var leaderBoard = {
+        name: userInitials,
+        score: userScore    
+    };
+
+    //retrieve high score from local storage OR initialize an empty array
+    var userScores = JSON.parse(localStorage.getItem("highScores")) || [];
+    //add new entry to the leader board
+    userScores.push(leaderBoard);
+    //save the updated high scores to local storage
+    localStorage.setItem("highScores", JSON.stringify(userScores));
+}
+
+function displayFinishScreen(userScore){
         // Display the finish screen with the number of correct answers
         var quizContainer = document.getElementById("quiz-container");
         quizContainer.style.display = "none";
@@ -214,16 +267,31 @@ function endQuiz() {
         
         var resultMessage = document.getElementById("result-message");
         resultMessage.innerText = "Your Score is: " + userScore;
-        
-        clearInterval(timer);
-        
-    }
+
+        var existingRetakeButton = document.getElementById("reset-button");
+
+    if (!existingRetakeButton) {
+         // Create a button element for retaking the quiz
+         var retakeButton = document.createElement("button");
+         retakeButton.textContent = "Retake Quiz";
+        retakeButton.id = "reset-button"; // Set the id for easy retrieval
+        retakeButton.addEventListener("click", function () {
+        // Handle the click event for the retake button
+        resetQuiz();
+    });
+
+    // Append the retake button to the finish screen
+    finishScreen.appendChild(retakeButton);
+}
+}
+
+
     
     var highScoresLink = document.getElementById("highScoresLink");
     
     highScoresLink.addEventListener("click", displayHighScores);
     
-    function displayHighScores(){
+function displayHighScores(){
         var highScoresList = document.getElementById("highScoresList");
         var highScores = JSON.parse(localStorage.getItem("highScores")) || [];
        // Sort scores in descending order
@@ -261,11 +329,30 @@ function endQuiz() {
     function createScoreListItem(score, index) {
          var listItem = document.createElement("li");
          listItem.textContent = `${index + 1}. ${score.name}: ${score.score}`;
-        return listItem;
+        return listItem;      
 }
 
+function resetQuiz() {
+    // Reset variables and state to start the quiz again
+    currentQuestionIndex = 0;
+    timerCount = 100;
+
+    // Iterate over each question and reset userAnswer to null
+    for (var i = 0; i < questions.length; i++) {
+        questions[i].userAnswer = null;
+    }
+
+    // Start the quiz again
+    startQuiz();
+}
     
-    
+var retakeButton = document.getElementById("reset-button");
+
+retakeButton.addEventListener("click", function () {
+    // Handle the click event for the retake button
+    resetQuiz();
+});
+
     
     
     
