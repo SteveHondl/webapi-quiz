@@ -10,6 +10,7 @@ var timerCount = startingTimerCount;
 var currentQuestionIndex = 0;
 //tracks whether quiz has been completed 
 var quizCompleted = false
+var userInitials = null;
 //Initialize Quiz Questions 
 var questions = InitializeQuestions();
 //Quiz questions with array of answers and correct answer
@@ -228,12 +229,17 @@ function endQuiz() {
  }
 //Updates the leader board if user qualifies 
 function updateLeaderBoard(userScore){
-    //prompts user to enter their first name or initials
-    var userInitials = prompt("Enter your first name or enter your initials");
-    //if users clicks ok with an empty string, they will be prompted until they fill in the field
-    if (userInitials === ""){
-        alert("please enter your first name or initials");
+    // Check if user initials are already set
+    if (userInitials === null) {
+         // Prompts user to enter their first name or initials
+        userInitials = prompt("Enter your first name or enter your initials");
+
+    // If users click OK with an empty string, they will be prompted until they fill in the field
+    if (userInitials === "") {
+        alert("Please enter your first name or initials");
+        // Recursive call to prompt again
         updateLeaderBoard(userScore);
+    }
     }
     //leader board credentials
     var leaderBoard = {
@@ -348,32 +354,38 @@ function displayHighScores(event){
 }
 //Function to reset quiz
 function resetQuiz() {
+    clearInterval(timer);
+    timerCount = startingTimerCount;
+    timerElement.textContent = timerCount;
+    //variable preventing user from checking high scores during the quiz
+    quizCompleted = false
+    //reset to null so user has to be enter initials if they retake the quiz
+    userInitials = null 
     //reset the question index and timer count if user chooses to retake the quiz
     currentQuestionIndex = 0;
-    timerCount = startingTimerCount;
 
     // Iterate over each question and reset userAnswer 
     for (var i = 0; i < questions.length; i++) {
         questions[i].userAnswer = null;
     }
-    // Start the quiz again
+
     startQuiz();
 }
-//Retrieve button element   
-var retakeButton = document.getElementById("reset-button");
-//Add event listener to make button interactive 
-retakeButton.addEventListener("click", function () {
-    // Handle the click event for the retake button
-    resetQuiz();
-});
-//Retrieve the button element
-var clearScoresButton = document.getElementById("clearscoresbutton");
-//Add event listener to the clear scores button to handle click event
-clearScoresButton.addEventListener("click", function() {
-    // Remove high scores from local storage
-    localStorage.removeItem("highScores");
-    //reload page to show changes
-    location.reload();
+    //Retrieve button element   
+    var retakeButton = document.getElementById("reset-button");
+    //Add event listener to make button interactive 
+    retakeButton.addEventListener("click", function () {
+        // Handle the click event for the retake button
+        resetQuiz();
+    });
+    //Retrieve the button element
+    var clearScoresButton = document.getElementById("clearscoresbutton");
+    //Add event listener to the clear scores button to handle click event
+    clearScoresButton.addEventListener("click", function() {
+        // Remove high scores from local storage
+        localStorage.removeItem("highScores");
+        //reload page to show changes
+        location.reload();
 });
 
     
