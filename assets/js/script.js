@@ -128,7 +128,7 @@ function displayAnswers(elementId, answerChoices, clickHandler) {
     // Get the HTML element with the specified ID
     var answersElement = document.getElementById(elementId);
     //clear and replace array of answers from previous question
-    answersElement.innerHTML = "";
+    answersElement.textContent = "";
 
     // Loop through answer choices
     for (var index = 0; index < answerChoices.length; index++) {
@@ -312,7 +312,7 @@ function displayHighScores(event){
     // Sort scores from highest to lowest
     highScores.sort((a, b) => b.score - a.score); 
     // Clear any existing content
-    highScoresList.innerHTML = "";
+    highScoresLink.textContent = "";
     //Determined number of scores to display (10 max)
     var numberOfScoresToDisplay = Math.min(highScores.length, 10);
 
@@ -346,10 +346,10 @@ function displayHighScores(event){
 
 // Function to create a list item for a high score
  function createScoreListItem(score, index) {
-        //create new list item 
+        //Create new list item 
          var listItem = document.createElement("li");
-         //set the text content of the list item with score
-         listItem.textContent = `${index + 1}. ${score.name}: ${score.score}`;
+         //String representing a users rank, name, and score
+         listItem.textContent = (index + 1) + ". " + score.name + ": " + score.score
         return listItem;      
 }
 //Function to reset quiz
@@ -370,6 +370,7 @@ function resetQuiz() {
     }
 
     startQuiz();
+    document.getElementById("finish-screen").style.display = "none";
 }
     //Retrieve button element   
     var retakeButton = document.getElementById("reset-button");

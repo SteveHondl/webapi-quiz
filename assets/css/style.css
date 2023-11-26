@@ -43,7 +43,7 @@ header {
 }
 
 #answers li {
-    background-color: rgb(142, 142, 170);
+    background-color: rgb(188, 140, 232);
     padding: 10px;
     margin: 10px;
     cursor: pointer;
@@ -94,4 +94,29 @@ header {
     cursor: pointer;
     background-color: green;
     color: white;
+}
+
+@media only screen and (min-width: 320px) {
+    body {
+        font-size: 22px; 
+    }
+
+    #timer {
+        font-size: 22px;
+    }
+
+    #questions {
+        font-size: 20px; 
+        margin-top: 10%; 
+    }
+
+    #answers li {
+        padding: 8px; 
+        margin: 8px; 
+    }
+
+    #reset-button,
+    #clearscoresbutton {
+        margin-top: 15px; 
+    }
 }
