@@ -2,13 +2,16 @@
 var startButton = document.getElementById("start-quiz");
 var timerElement = document.getElementById("timer");
 var answersElement = document.getElementById("answers");
+var retakeButton = document.getElementById("reset-button");
+var clearScoresButton = document.getElementById("clearscoresbutton");
+var showHighScoresButton = document.getElementById("showHighScores")
 //Timer Variables
 var timer;
 var startingTimerCount = 60;
 var timerCount = startingTimerCount;
 //Tracks current question starting with first question
 var currentQuestionIndex = 0;
-//tracks whether quiz has been completed 
+//Tracks whether quiz has been completed 
 var quizCompleted = false
 var userInitials = null;
 //Initialize Quiz Questions 
@@ -172,12 +175,12 @@ function displayFeedbackMessage(message) {
     }, 1000);
 }
 
-//will find the correct answer in each set of answers
+//Will find the correct answer in each set of answers
 function findCorrectAnswer(answers){
     return answers.find(answer => answer.correct);
 }
 
-//handles the click even when any answer is selected
+//Handles the click event when any answer is selected
 function handleAnswerClick(event) {
     //Check if there are more questions to be displayed
     if(currentQuestionIndex < questions.length){
@@ -224,13 +227,11 @@ function endQuiz() {
     clearInterval(timer);
     //boolean value indicating quiz is over
     quizCompleted = true
-    //Link to the high scores tab for user to view
-    highScoresLink.addEventListener("click", displayHighScores);
  }
 //Updates the leader board if user qualifies 
 function updateLeaderBoard(userScore){
     // Check if user initials are already set
-    if (userInitials === null) {
+    if (userInitials === null || userInitials === "") {
          // Prompts user to enter their first name or initials
         userInitials = prompt("Enter your first name or enter your initials");
 
@@ -257,14 +258,11 @@ function updateLeaderBoard(userScore){
 //Displays the final screen with the users score
 function displayFinishScreen(userScore){
     //Reference to the high scores link
-    var highScoresLink = document.getElementById("highScoresLink");
+    var showHighScores= document.getElementById("showHighScores");
     //Allows user to click on the link and be taken to the high scores screen
-    highScoresLink.addEventListener("click", displayHighScores);
+    showHighScores.addEventListener("click", displayHighScores);
      // Check if the element exists before adding the event listener
     
-     if (highScoresLink) {
-    highScoresLink.addEventListener("click", displayHighScores);
-    }
     //Hide the quiz container and show the "finish" screen
     var quizContainer = document.getElementById("quiz-container");
     quizContainer.style.display = "none";
@@ -274,34 +272,9 @@ function displayFinishScreen(userScore){
     //Shows the user what their score is
     var resultMessage = document.getElementById("result-message");
     resultMessage.innerText = "Your Score is: " + userScore;
-    // //check if the button already exists
-    var existingRetakeButton = document.getElementById("reset-button");
-
-    if (!existingRetakeButton) {
-        // Create a button element for retaking the quiz
-        var retakeButton = document.createElement("button");
-        retakeButton.textContent = "Retake Quiz";
-    retakeButton.id = "reset-button"; // Set the id for easy retrieval
-    retakeButton.addEventListener("click", function () {
-    // Handle the click event for the retake button
-    resetQuiz();
-    });
-    // Append the retake button to the finish screen
-    finishScreen.appendChild(retakeButton);
-
-    }
 }
-    var highScoresLink = document.getElementById("highScoresLink");
-    
-    highScoresLink.addEventListener("click", displayHighScores);
-    
+
 function displayHighScores(event){
-        // Check if the quiz has been completed before allowing user to access to high scores
-     if (!quizCompleted) {
-        event.preventDefault();
-        alert("You can only view high scores after completing the quiz.");
-        return;
-     }
      //html references
      var highScoresList = document.getElementById("highScoresList");
      var highScoresScreen = document.getElementById("highScoresScreen");
@@ -312,9 +285,9 @@ function displayHighScores(event){
     // Sort scores from highest to lowest
     highScores.sort((a, b) => b.score - a.score); 
     // Clear any existing content
-    highScoresLink.textContent = "";
+    highScoresList.innerHTML = ""
     //Determined number of scores to display (10 max)
-    var numberOfScoresToDisplay = Math.min(highScores.length, 10);
+    var numberOfScoresToDisplay = Math.min(highScores.length, 15);
 
     // Use a for loop to iterate through highScores
     for (var i = 0; i < numberOfScoresToDisplay; i++) {
@@ -352,6 +325,11 @@ function displayHighScores(event){
          listItem.textContent = (index + 1) + ". " + score.name + ": " + score.score
         return listItem;      
 }
+// Call the function to display high scores
+function showHighScores() {
+    displayHighScores();
+}
+
 //Function to reset quiz
 function resetQuiz() {
     clearInterval(timer);
