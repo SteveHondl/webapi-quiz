@@ -3,10 +3,7 @@ var startButton = document.getElementById("start-quiz");
 var timerElement = document.getElementById("timer");
 var answersElement = document.getElementById("answers");
 var retakeButton = document.getElementById("reset-button");
-var clearScoresButton = document.getElementById("clearscoresbutton");
-var showHighScoresButton = document.getElementById("showHighScores")
 //Timer Variables
-var timer;
 var startingTimerCount = 60;
 var timerCount = startingTimerCount;
 //Tracks current question starting with first question
@@ -258,7 +255,7 @@ function updateLeaderBoard(userScore){
 //Displays the final screen with the users score
 function displayFinishScreen(userScore){
     //Reference to the high scores link
-    var showHighScores= document.getElementById("showHighScores");
+    var showHighScores = document.getElementById("showHighScores");
     //Allows user to click on the link and be taken to the high scores screen
     showHighScores.addEventListener("click", displayHighScores);
      // Check if the element exists before adding the event listener
