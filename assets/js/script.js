@@ -1,8 +1,6 @@
 //HTML References
 var startButton = document.getElementById("start-quiz");
 var timerElement = document.getElementById("timer");
-var answersElement = document.getElementById("answers");
-var retakeButton = document.getElementById("reset-button");
 //Timer Variables
 var startingTimerCount = 60;
 var timerCount = startingTimerCount;
@@ -271,7 +269,7 @@ function displayFinishScreen(userScore){
     resultMessage.innerText = "Your Score is: " + userScore;
 }
 
-function displayHighScores(event){
+function displayHighScores(){
      //html references
      var highScoresList = document.getElementById("highScoresList");
      var highScoresScreen = document.getElementById("highScoresScreen");
